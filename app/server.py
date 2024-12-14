@@ -13,9 +13,9 @@ class COLORS:
 CURRENCY = "KWH"
 LIMIT = 2000
 
-# client = JsonRpcClient("https://s.altnet.rippletest.net:51234/")
-# cold_wallet = generate_faucet_wallet(client, debug=True)
-# print(f"{COLORS.GREY}Created cold wallet with address: {cold_wallet.classic_address}{COLORS.RESET}")
+client = JsonRpcClient("https://s.altnet.rippletest.net:51234/")
+cold_wallet = generate_faucet_wallet(client, debug=True)
+print(f"{COLORS.GREY}Created cold wallet with address: {cold_wallet.classic_address}{COLORS.RESET} and seed: {cold_wallet.seed}")
 cold_wallet_address = "rJvbDGN6ZEKDrdpjYwFzRpu5HbVNATBbkV"
 
 
@@ -34,12 +34,12 @@ def send():
 
 @app.route('/producer/produce')
 def produce():
-    return render_template('produce.html')
+    return render_template('produce.html', cold_wallet_addres=cold_wallet.classic_address, cold_wallet_seed=cold_wallet.seed)
 
 @app.route('/consumer/consume')
 def consume():
-    # return render_template('consume.html', cold_wallet_address=cold_wallet.classic_address)
-    return render_template('consume.html', cold_wallet_address=cold_wallet_address)
+    return render_template('consume.html', cold_wallet_address=cold_wallet.classic_address)
+    # return render_template('consume.html', cold_wallet_address=cold_wallet_address)
 
 
 if __name__ == '__main__':

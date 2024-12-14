@@ -35,104 +35,20 @@
             <p id="transaction-status">Transaction: </p>
             <button id="transaction-button">Send Transaction</button>
     </div>
-
+    
+    <script src="/static/scripts/transactions.js"></script>
     <script>
-        let cleint;
-
-        statusDiv = document.querySelector('.status');
-        trustline = document.querySelector('#trustline');
-        transaction = document.querySelector('#transaction');
-
-        console.log(statusDiv.style)
-
-        statusDiv.style.display = 'none';
-        document.getElementById('trustline').style.display = 'none';
-        document.getElementById('transaction').style.display = 'none';
-
-        document.getElementById('trustline-button').addEventListener('click', async function() {
-            const receiverAddress = document.getElementById('receiver_address').value;
-            const userSeed = document.getElementById('user_seed').value;
-
-            document.getElementById('trustline-status').innerText = 'Trustline: Creating...';
-
-            const trustlineCreated = await createTrustline(client, userSeed, receiverAddress);
-
-            if (trustlineCreated) {
-                document.getElementById('trustline-status').innerText = 'Trustline: Created';
-            } else {
-                document.getElementById('trustline-status').innerText = 'Trustline: Failed';
-            }
-        });
-
-        document.getElementById('transaction-button').addEventListener('click', async function() {
-            const receiverAddress = document.getElementById('receiver_address').value;
-            const userAddress = document.getElementById('user_address').value;
-            const userSeed = document.getElementById('user_seed').value;
-            const amount = document.getElementById('amount').value;
-
-            document.getElementById('transaction-status').innerText = 'Transaction: Sending...';
-            
-            const transactionSent = await issueTokens(client, userSeed, receiverAddress, amount);
-
-            if (transactionSent) {
-                document.getElementById('transaction-status').innerText = 'Transaction: Sent';
-            } else {
-                document.getElementById('transaction-status').innerText = 'Transaction: Failed';
-            }
-        });
-
         document.querySelector('form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            
-            client = new xrpl.Client("wss://s.altnet.rippletest.net:51233")
-            await client.connect();
-            console.log("Connected successfully");
+        event.preventDefault();
 
-            const receiverAddress = document.getElementById('receiver_address').value;
-            const userAddress = document.getElementById('user_address').value;
-            const userSeed = document.getElementById('user_seed').value;
+        const receiverAddress = document.getElementById('receiver_address').value;
+        const userAddress = document.getElementById('user_address').value;
+        const userSeed = document.getElementById('user_seed').value;
+        const amount = document.getElementById('amount').value;
 
-            // try {
-            //     const accountInfo = await client.request({
-            //         command: 'account_info',
-            //         account: receiverAddress
-            //     })
-            //     console.log('Account exists:', accountInfo)
-            //     } catch (error) {
-            //     if (error.data.error === 'actNotFound') {
-            //         console.log('Account does not exist')
-            //     } else {
-            //         console.error('Error checking account:', error)
-            //     }
-            // }
-
-
-            // const receiverAddress = receiverWallet.classicAddress;
-            // const userAddress = userWallet.classicAddress;
-            // const userSeed = userWallet.seed;
-            // const amount = document.getElementById('amount').value;
-
-            statusDiv.style.display = 'block';
-            document.getElementById('trustline-button').style.display = 'none';
-
-            console.log(document.getElementById('trustline-status').style)
-
-            document.getElementById('trustline-status').innerText = 'Trustline: Verifying...';
-            trustline.style.display = 'block';
-            
-            console.log("checking trustline");
-            const trustlineExists = await checkTrustline(client, receiverAddress, userAddress);
-            console.log("done checking trustline");
-
-            if (trustlineExists) {
-                document.getElementById('trustline-status').innerText = 'Trustline: Exists';
-                transaction.style.display = 'block';
-            } else {
-                document.getElementById('trustline-status').innerText = 'Trustline: Does not exist';
-                document.getElementById('trustline-button').style.display = 'block';
-            }
-
-        });
+        processForm(userAddress, userSeed, receiverAddress, amount);
+        
+    });
     </script>
 </body>
 </html>
