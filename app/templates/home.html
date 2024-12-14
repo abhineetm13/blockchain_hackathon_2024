@@ -4,4 +4,65 @@
 </head>
 <body>
     <h1>Hello world!</h1>
+
+    <div id="choose-participant">
+        <button id="producer">Producer</button>
+        <button id="consumer">Consumer</button>
+    </div>
+
+    <div class="interface">
+        <div class="producer-options">
+            <button>produce energy tokens</button>
+            <button>send energy tokens</button>
+        </div>
+    
+        <div class="consumer-options">
+            <button>consume energy tokens</button>
+            <button>send energy tokens</button>
+        </div>
+    </div>
+    
+
+    <script>
+        const chooseButton = document.getElementById('choose-participant');
+        const producerOptions = document.querySelector('.producer-options');
+        const consumerOptions = document.querySelector('.consumer-options');
+
+        producerOptions.style.display = 'none';
+        consumerOptions.style.display = 'none';
+
+        chooseButton.addEventListener('click', (event) => {
+            if (event.target.id === 'producer') {
+                producerOptions.style.display = 'block';
+                consumerOptions.style.display = 'none';
+                currentParticipant = 'producer';
+            } else if (event.target.id === 'consumer') {
+                consumerOptions.style.display = 'block';
+                producerOptions.style.display = 'none';
+                currentParticipant = 'consumer';
+            }
+        });
+
+        document.querySelectorAll('.producer-options button').forEach((button, index) => {
+            button.addEventListener('click', () => {
+                if (index === 0) {
+                    window.location.href = '/producer/produce';
+                } else if (index === 1) {
+                    window.location.href = '/producer/send';
+                }
+            });
+        });
+
+        document.querySelectorAll('.consumer-options button').forEach((button, index) => {
+            button.addEventListener('click', () => {
+                if (index === 0) {
+                    window.location.href = '/consumer/consume';
+                } else if (index === 1) {
+                    window.location.href = '/consumer/send';
+                }
+            });
+        });
+
+
+    </script>
 </body>

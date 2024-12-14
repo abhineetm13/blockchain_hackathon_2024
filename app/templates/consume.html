@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consume</title>
+</head>
+<body>
+    <h1>Consume</h1>
+    <form action="/consume" method="post">
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" readonly value="{{ cold_wallet_address }}"><br><br>
+        
+        <label for="seed">User Seed:</label>
+        <input type="text" id="seed" name="seed" required><br><br>
+        
+        <label for="amount">Amount Consumed:</label>
+        <input type="number" id="amount" name="amount" required><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
