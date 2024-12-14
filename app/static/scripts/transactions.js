@@ -100,7 +100,7 @@ async function processForm(_userAddress, _userSeed, _receiverAddress, _amount, t
         await sendTransactionRequest(getClient(), userSeed, receiverAddress, amount);
     } else {
         if(trust_transfer){
-            await sendNewTrustlineRequest(await getClient(), userSeed, receiverAddress);
+            await sendNewTrustlineRequest(await getClient(), _receiverSeed, userAddress);
             transaction.style.display = 'block';
             document.getElementById('transaction-button').style.display = 'none';
             await sendTransactionRequest(getClient(), userSeed, receiverAddress, amount);

