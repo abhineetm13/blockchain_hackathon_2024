@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trustline Setup</title>
+    <script src="https://cdn.jsdelivr.net/npm/xrpl/build/xrpl-latest-min.js"></script>
+    <script src="/static/scripts/xrpl_functions.js"></script>
+</head>
+<body>
+    <h1>Trustline Setup</h1>
+    <form action="/submit_trustline" method="post">
+        <label for="receiver_address">Receiver's Classic Address:</label>
+        <input type="text" id="receiver_address" name="receiver_address" required><br><br>
+
+        <label for="seed">Seed:</label>
+        <input type="text" id="seed" name="seed" required><br><br>
+
+        <label for="sender_address">Sender's Address:</label>
+        <input type="text" id="sender_address" name="sender_address" required><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <div class="status">
+        <h2>Status:</h2>
+        <div id="trustline">
+            <p id="trustline-status"></p>
+        </div>
+    </div>
+
+    <script>
+        async function verifyAccount(client, address) {
+            try {
+                const accountInfo = await client.request({
+                    command: 'account_info',
+                    account: address
+                });
+                return true;
+            } catch (error) {
+                if (error.data.error === 'actNotFound') {
+                    return false;
+                } else {
+                    throw(error);
+                }
+            }
+        }
+        document.querySelector('form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            document.getElementById('trustline-status').innerText = 'Trustline: creating...';
+
+            const receiverAddress = document.getElementById('receiver_address').value;
+            const seed = document.getElementById('seed').value;
+            const senderAddress = document.getElementById('sender_address').value;
+
+            
+
+            const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233");
+            await client.connect();
+            console.log("seed: ", seed);
+
+            // const wallet1 = xrpl.Wallet.generate();
+            // const wallet2 = xrpl.Wallet.generate();
+
+            // const fundResult1 = await client.fundWallet(wallet1);
+            // const fundResult2 = await client.fundWallet(wallet2);
+
+            // console.log("Fund Result 1: ", fundResult1);
+            // console.log("Fund Result 2: ", fundResult2);
+
+            // console.log("Wallet 1 Address: ", wallet1.classicAddress);
+            // console.log("Wallet 1 Seed: ", wallet1.seed);
+            // console.log("Wallet 2 Address: ", wallet2.classicAddress);
+            // console.log("Wallet 2 Seed: ", wallet2.seed);
+
+            console.log(await verifyAccount(client, receiverAddress));
+            if(await checkTrustline(client, receiverAddress, senderAddress)){
+                document.getElementById('trustline-status').innerText = 'Trustline already exists';
+            } else {
+                const trustline = await createTrustline(client, seed, senderAddress);
+                console.log(trustline)
+                document.getElementById('trustline-status').innerText = 'created Trustline';
+            }
+            
+        });
+    </script>
+</body>
+</html>

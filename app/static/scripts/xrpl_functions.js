@@ -19,20 +19,26 @@ async function createTrustline(client, seed, issuer, currency = "KWH", limit = 2
     return tx_result.result.validated;
 }
 
-async function checkTrustline(client, consumerAddress, producerAddress) {
+async function checkTrustline(client, consumerAddress, producerAddress, limit = 2000) {
     try {
         // Request the account lines (trust lines) for the consumer
         console.log("Checking trustline between", consumerAddress, "and", producerAddress);
         const response = await client.request({
             command: "account_lines",
+            account: producerAddress,
+            ledger_index: "validated"
+        });
+        const consumer_res = await client.request({
+            command: "account_lines",
             account: consumerAddress,
             ledger_index: "validated"
         });
-        console.log("Trustlines:", response.result.lines)
+        console.log("Trustlines of consumer:", consumer_res.result)
+        console.log("Trustlines of producer:", response.result)
 
         // Iterate through the trust lines
         for (const line of response.result.lines) {
-            if (line.account === producerAddress) {
+            if (line.account === consumerAddress && line.limit_peer >= limit) {
                 return true;  // Trust line exists
             }
         }
@@ -40,6 +46,21 @@ async function checkTrustline(client, consumerAddress, producerAddress) {
     } catch (error) {
         console.error("Error checking trustline:", error);
         return false;  // If there's an error, assume no trustline exists
+    }
+}
+
+async function getBalance(client, address) {
+    try {
+        const accountInfo = await client.request({
+            command: 'account_lines',
+            account: address,
+            ledger_index: 'validated'
+        });
+        console.log("account Info:", accountInfo.result);
+        return accountInfo.result.lines.reduce((total, obj) => total + parseInt(obj.balance), 0);
+    } catch (error) {
+        console.error("Error getting balance:", error);
+        return 0;
     }
 }
 

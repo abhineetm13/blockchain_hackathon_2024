@@ -70,14 +70,17 @@ async function verifyTrustline(client, userAddress, receiverAddress){
 }
 
 document.getElementById('trustline-button').addEventListener('click', async function() {
-    await addNewTrustline(getClient(), userSeed, receiverAddress);
+    window.location.href = '/trustline';
+    // await sendNewTrustlineRequest(await getClient(), userSeed, receiverAddress);
+    transaction.style.display = 'block';
 });
 
 document.getElementById('transaction-button').addEventListener('click', async function() {
-    await addNewTrustline(getClient(), userSeed, receiverAddress, amount);
+    console.log(amount);
+    await sendTransactionRequest(await getClient(), userSeed, receiverAddress, amount);
 });
 
-async function processForm(_userAddress, _userSeed, _receiverAddress, _amount, trust_transfer = false){
+async function processForm(_userAddress, _userSeed, _receiverAddress, _amount, trust_transfer = false, _receiverSeed = null){
     userAddress = _userAddress;
     userSeed = _userSeed;
     receiverAddress = _receiverAddress;

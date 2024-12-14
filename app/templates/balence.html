@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/xrpl/build/xrpl-latest-min.js"></script>
+        <script src="/static/scripts/xrpl_functions.js"></script>
+        <title>Get Balance</title>  
+    </head>
+    <body>
+        <h1>Get Balance</h1>
+        <form action="/get_balance" method="post">
+            <label for="address">Classic Address:</label>
+            <input type="text" id="address" name="address" required>
+            <button type="submit">Get Balance</button>
+        </form>
+
+        <p id="balence">Balence: </p>
+    </body>
+
+    <script>
+        let client;
+
+        async function getClient(){
+            if(client === undefined){
+                client = new xrpl.Client("wss://s.altnet.rippletest.net:51233")
+                await client.connect();
+                console.log("Connected successfully");
+            }
+            return client;
+        }
+
+        document.querySelector('form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            document.getElementById('balence').innerText = 'Balence: retrieving...';
+
+            const address = document.getElementById('address').value;
+
+            const balance = await getBalance(await getClient(), address);
+            document.getElementById('balence').innerText = `Balence: ${balance} KWH`;
+        });
+    </script>
+</html>

@@ -41,6 +41,14 @@ def consume():
     return render_template('consume.html', cold_wallet_address=cold_wallet.classic_address)
     # return render_template('consume.html', cold_wallet_address=cold_wallet_address)
 
+@app.route('/balence')
+def balence():
+    return render_template('balence.html')
+
+@app.route('/trustline')
+def trustline():
+    return render_template('trustline.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
